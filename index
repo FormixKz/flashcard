@@ -1,0 +1,54 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export default function FlashcardApp() {
+  const [flashcards, setFlashcards] = useState([
+    { question: "What is React?", answer: "A JavaScript library for building UI" },
+    { question: "What is a component?", answer: "Reusable UI element in React" },
+  ]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [newCard, setNewCard] = useState({ question: "", answer: "" });
+
+  const handleNext = () => {
+    setShowAnswer(false);
+    setCurrentIndex((prev) => (prev + 1) % flashcards.length);
+  };
+
+  const handleAddCard = () => {
+    if (newCard.question && newCard.answer) {
+      setFlashcards([...flashcards, newCard]);
+      setNewCard({ question: "", answer: "" });
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4 p-6">
+      <Card className="w-96 text-center p-4">
+        <CardContent>
+          <h2 className="text-lg font-semibold">{flashcards[currentIndex].question}</h2>
+          {showAnswer && <p className="mt-2 text-gray-700">{flashcards[currentIndex].answer}</p>}
+          <Button className="mt-4" onClick={() => setShowAnswer(!showAnswer)}>
+            {showAnswer ? "Hide Answer" : "Show Answer"}
+          </Button>
+        </CardContent>
+      </Card>
+      <Button onClick={handleNext}>Next</Button>
+      <div className="flex flex-col gap-2 w-96">
+        <Input
+          placeholder="Question"
+          value={newCard.question}
+          onChange={(e) => setNewCard({ ...newCard, question: e.target.value })}
+        />
+        <Input
+          placeholder="Answer"
+          value={newCard.answer}
+          onChange={(e) => setNewCard({ ...newCard, answer: e.target.value })}
+        />
+        <Button onClick={handleAddCard}>Add Flashcard</Button>
+      </div>
+    </div>
+  );
+}

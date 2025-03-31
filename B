@@ -1,0 +1,110 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export default function FlashcardApp() {
+  const [flashcards, setFlashcards] = useState([
+    { question: "What is React?", answer: "A JavaScript library for building UI" },
+    { question: "What is a component?", answer: "Reusable UI element in React" },
+  ]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [newCard, setNewCard] = useState({ question: "", answer: "" });
+
+  const handleNext = () => {
+    setShowAnswer(false);
+    setCurrentIndex((prev) => (prev + 1) % flashcards.length);
+  };
+
+  const handleAddCard = () => {
+    if (newCard.question && newCard.answer) {
+      setFlashcards([...flashcards, newCard]);
+      setNewCard({ question: "", answer: "" });
+    }
+  };
+
+  return (
+    <div
+      className="flex flex-col items-center gap-4 p-6"
+      style={{
+        fontFamily: "Arial, sans-serif",
+        backgroundColor: "#f4f4f4",
+        minHeight: "100vh",
+      }}
+    >
+      <Card
+        className="w-96 text-center p-4"
+        style={{
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          borderRadius: "8px",
+        }}
+      >
+        <CardContent>
+          <h2 className="text-lg font-semibold" style={{ color: "#333" }}>
+            {flashcards[currentIndex].question}
+          </h2>
+          {showAnswer && (
+            <p className="mt-2 text-gray-700" style={{ color: "#555" }}>
+              {flashcards[currentIndex].answer}
+            </p>
+          )}
+          <Button
+            className="mt-4"
+            onClick={() => setShowAnswer(!showAnswer)}
+            style={{
+              backgroundColor: "#007bff",
+              color: "white",
+              padding: "10px 15px",
+              borderRadius: "5px",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            {showAnswer ? "Hide Answer" : "Show Answer"}
+          </Button>
+        </CardContent>
+      </Card>
+      <Button
+        onClick={handleNext}
+        style={{
+          backgroundColor: "#28a745",
+          color: "white",
+          padding: "10px 15px",
+          borderRadius: "5px",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Next
+      </Button>
+      <div className="flex flex-col gap-2 w-96">
+        <Input
+          placeholder="Question"
+          value={newCard.question}
+          onChange={(e) => setNewCard({ ...newCard, question: e.target.value })}
+          style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}
+        />
+        <Input
+          placeholder="Answer"
+          value={newCard.answer}
+          onChange={(e) => setNewCard({ ...newCard, answer: e.target.value })}
+          style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}
+        />
+        <Button
+          onClick={handleAddCard}
+          style={{
+            backgroundColor: "#dc3545",
+            color: "white",
+            padding: "10px 15px",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Add Flashcard
+        </Button>
+      </div>
+    </div>
+  );
+}
